@@ -65,6 +65,7 @@ func ProcessLine(line, old, new string) (found bool, res string, occ int) {
 func main() {
 	occ, lines, err := FindReplaceFile("test.txt", "dst.txt", "Go ", "Python ")
 	if err != nil {
+		fmt.Printf("Error while executing FindReplace: %v \n", err)
 		return
 	}
 	fmt.Println("")
