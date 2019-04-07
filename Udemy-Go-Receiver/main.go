@@ -36,6 +36,31 @@ func UpdatePtr(ptr *string) {
 	*ptr = "pointer"
 }
 
+// Pointers X Receivers: exercise function
+type Post struct {
+	Title     string
+	Text      string
+	published bool
+}
+
+func (pst Post) Headline() string {
+	return fmt.Sprintf("%v - %v", pst.Title, pst.Text[:70])
+}
+
+func (pst Post) Published() bool {
+	return pst.published
+}
+func (pst *Post) Publish() {
+	pst.published = true
+}
+func (pst *Post) Unpublish() {
+	pst.published = false
+}
+
+func UpperTitle(pst *Post) {
+	pst.Title = strings.ToUpper(pst.Title)
+}
+
 func main() {
 
 	// ************************************************************ //
@@ -103,4 +128,22 @@ func main() {
 	fmt.Println("")
 	fmt.Println(strings.ToUpper("La combinaison de pointer et de receiver"))
 	fmt.Println("")
+	pst := Post{
+		Title: "Go release",
+		Text: `test d'ajout d'un texte avec
+		plusieurs lignes à l'intérieur. On utilise un backtick pour cela`,
+	}
+	fmt.Println(pst.Headline())
+	fmt.Printf("Post published? %v\n", pst.Published())
+	pst.Publish()
+	fmt.Printf("Post published? %v\n", pst.Published())
+	pst.Unpublish()
+	fmt.Printf("Post published? %v\n", pst.Published())
+
+	pythonPost := &Post{
+		Title: "Python intro",
+		Text:  "Text page wikipedia python. Dans cette exemple on créé un Post qui est directement un pointeur",
+	}
+	UpperTitle(pythonPost)
+	fmt.Println(pythonPost.Headline())
 }
