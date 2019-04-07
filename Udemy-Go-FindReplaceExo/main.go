@@ -9,10 +9,6 @@ import (
 
 // FindReplaceFile
 func FindReplaceFile(src, dst, old, new string) (occ int, lines []int, err error) {
-
-	occInit := 0
-	numLine := 0
-
 	srcFile, err := os.Open(src)
 	if err != nil {
 		return 0, nil, fmt.Errorf("Impossible to open: %v", srcFile)
@@ -27,6 +23,9 @@ func FindReplaceFile(src, dst, old, new string) (occ int, lines []int, err error
 
 	writer := bufio.NewWriter(dstFile)
 	defer writer.Flush()
+
+	occInit := 0
+	numLine := 0
 
 	scanner := bufio.NewScanner(srcFile)
 	for scanner.Scan() {
