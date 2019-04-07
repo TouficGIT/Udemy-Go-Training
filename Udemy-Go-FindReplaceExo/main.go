@@ -7,7 +7,8 @@ import (
 	"strings"
 )
 
-// FindReplaceFile
+// FindReplaceFile replace old character by the new one
+// and retrieve number of old occurence, the lines where old word was find and error if there is one
 func FindReplaceFile(src, dst, old, new string) (occ int, lines []int, err error) {
 	srcFile, err := os.Open(src)
 	if err != nil {
@@ -69,6 +70,9 @@ func main() {
 		return
 	}
 	fmt.Println("")
+	fmt.Println("== Summary ==")
+	defer fmt.Println("== End of Summary ==")
 	fmt.Printf("Nb occ: %v\n", occ)
+	fmt.Printf("Nb of lines: %v\n", len(lines))
 	fmt.Printf("In lines: %v\n", lines)
 }
