@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func FindReplaceFile(src, old, new string) (occ int, lines []int, err error) {
+func FindReplaceFile(src, dst, old, new string) (occ int, lines []int, err error) {
 
 	occInit := 0
 	numLine := 0
@@ -17,6 +17,12 @@ func FindReplaceFile(src, old, new string) (occ int, lines []int, err error) {
 		return 0, nil, fmt.Errorf("Impossible to open: %v", srcFile)
 	}
 	defer srcFile.Close()
+
+	dstFile, err := os.Create(dst)
+	if err != nil {
+		return 0, nil, fmt.Errorf("Impossible to create: %v", dstFile)
+	}
+	defer dstFile.Close()
 
 	scanner := bufio.NewScanner(srcFile)
 	for scanner.Scan() {
@@ -30,6 +36,9 @@ func FindReplaceFile(src, old, new string) (occ int, lines []int, err error) {
 		} else {
 			fmt.Printf("Line %d : %v\n", numLine, res)
 		}
+		writer := bufio.NewWriter(dstFile)
+		defer writer.Flush()
+		fmt.Fprintln(writer, res)
 	}
 	return occInit, lines, err
 }
@@ -49,10 +58,11 @@ func ProcessLine(line, old, new string) (found bool, res string, occ int) {
 }
 
 func main() {
-	occ, lines, err := FindReplaceFile("test.txt", "Go ", "Python ")
+	occ, lines, err := FindReplaceFile("test.txt", "dst.txt", "Go ", "Python ")
 	if err != nil {
 		return
 	}
+	fmt.Println("")
 	fmt.Printf("Nb occ: %v\n", occ)
 	fmt.Printf("In lines: %v\n", lines)
 }
