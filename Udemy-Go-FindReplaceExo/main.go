@@ -7,6 +7,7 @@ import (
 	"strings"
 )
 
+// FindReplaceFile
 func FindReplaceFile(src, dst, old, new string) (occ int, lines []int, err error) {
 
 	occInit := 0
@@ -24,6 +25,9 @@ func FindReplaceFile(src, dst, old, new string) (occ int, lines []int, err error
 	}
 	defer dstFile.Close()
 
+	writer := bufio.NewWriter(dstFile)
+	defer writer.Flush()
+
 	scanner := bufio.NewScanner(srcFile)
 	for scanner.Scan() {
 		numLine++
@@ -36,24 +40,26 @@ func FindReplaceFile(src, dst, old, new string) (occ int, lines []int, err error
 		} else {
 			fmt.Printf("Line %d : %v\n", numLine, res)
 		}
-		writer := bufio.NewWriter(dstFile)
-		defer writer.Flush()
 		fmt.Fprintln(writer, res)
 	}
 	return occInit, lines, err
 }
 
+// ProcessLine searches for old in line to replace it by new
+// It returns found=true, if the pattern was found, res with the resulting string
+// and occ with the number of occurence of old
 func ProcessLine(line, old, new string) (found bool, res string, occ int) {
-	found = strings.Contains(line, old)
-	if found != false {
-		occ = strings.Count(line, old)
-		for i := 0; i < occ; i++ {
-			res = strings.Replace(line, old, new, occ)
-		}
-	} else {
-		res = line
-		occ = 0
+	oldLower := strings.ToLower(old)
+	newLower := strings.ToLower(new)
+	res = line
+	if strings.Contains(line, old) || strings.Contains(line, oldLower) {
+		found = true
+		occ += strings.Count(line, old)
+		occ += strings.Count(line, oldLower)
+		res = strings.Replace(line, old, new, -1)
+		res = strings.Replace(res, oldLower, newLower, -1)
 	}
+
 	return found, res, occ
 }
 
