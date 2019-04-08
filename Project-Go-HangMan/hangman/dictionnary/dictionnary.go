@@ -2,7 +2,9 @@ package dictionnary
 
 import (
 	"bufio"
+	"math/rand"
 	"os"
+	"time"
 )
 
 var words = make([]string, 0, 50)
@@ -23,4 +25,10 @@ func Load(filename string) error {
 	}
 
 	return nil
+}
+
+func PickWord() string {
+	rand.Seed(time.Now().Unix())
+	i := rand.Intn(len(words))
+	return words[i]
 }
