@@ -7,6 +7,7 @@ import (
 )
 
 var MaxLenCourse = 20
+var MaxLenName = 30
 
 type Cert struct {
 	Course string
@@ -29,7 +30,10 @@ func New(course, name, date string) (*Cert, error) {
 	if err != nil {
 		return nil, err
 	}
-	n := name
+	n, err := validateName(name, MaxLenName)
+	if err != nil {
+		return nil, err
+	}
 	d := date
 
 	cert := &Cert{
@@ -62,4 +66,12 @@ func validateStr(str string, maxLen int) (string, error) {
 		return c, fmt.Errorf("Invalid string. got='%s', len=%d", c, len(c))
 	}
 	return c, nil
+}
+
+func validateName(name string, maxLen int) (string, error) {
+	n, err := validateStr(name, MaxLenName)
+	if err != nil {
+		return "", err
+	}
+	return strings.ToTitle(n), nil
 }

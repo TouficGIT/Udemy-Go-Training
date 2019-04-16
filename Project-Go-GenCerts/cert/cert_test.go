@@ -28,6 +28,21 @@ func TestCourseTooLong(t *testing.T) {
 	course := "azertyuiopqsdfghjklmwxcvbnazertyuiopqsdfghjklmwxcvbn"
 	_, err := New(course, "Emilien", "2019-04-16")
 	if err == nil {
-		t.Errorf("Error should be returned on a too long course name (course=%s", course)
+		t.Errorf("Error should be returned on a too long course name (course=%s)", course)
+	}
+}
+
+func TestNameEmptyValue(t *testing.T) {
+	_, err := New("Golang", "", "2019-04-16")
+	if err == nil {
+		t.Errorf("Error should be returned on an empty name\n")
+	}
+}
+
+func TestNameTooLong(t *testing.T) {
+	name := "azertyuiopqsdfghjklmwxcvbnazertyuiopqsdfghjklmwxcvbnazertyuiopqsdfghjklm"
+	_, err := New("Golang", name, "2019-04-16")
+	if err == nil {
+		t.Errorf("Error should be returned on a too long name (name=%s)", name)
 	}
 }
