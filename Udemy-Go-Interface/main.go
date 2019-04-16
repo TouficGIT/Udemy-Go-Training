@@ -17,9 +17,9 @@ package main
 
 import "fmt"
 
-// Définition d'un type Instrumenter avec la fonction Play
+// ********** Partie I : intéret d'une interface ********** //
 
-// ********** Partie I ********** //
+// Définition d'un type Instrumenter avec la fonction Play
 type Instrumenter interface {
 	Play()
 }
@@ -41,7 +41,7 @@ func (g Guitar) Connect(amp string) {
 	fmt.Printf("Connected to %v", amp)
 }
 
-// ********** Partie II ********** //
+// ********** Partie II : comportement en fonction du type ********** //
 type Animal interface {
 	Speak() string
 }
@@ -68,6 +68,38 @@ func describeAnimal(a Animal) {
 		fmt.Printf("We have a dog, color = %v\n", v.color)
 	case Cat:
 		fmt.Printf("We have a cat, jumpHeight = %v\n", v.jumpHeight)
+	}
+}
+
+// ********** Partie III : empty interface ********** //
+
+type Person struct {
+	Name string
+	Age  int
+}
+
+type Cooker interface {
+	Cook()
+}
+
+type Chef struct {
+	Person
+	Stars int
+}
+
+func (c Chef) Cook() {
+	fmt.Printf("I'm cooking with %v stars\n", c.Stars)
+}
+
+func processPerson(i interface{}) {
+	switch p := i.(type) {
+	case Person:
+		fmt.Printf("We have a person= %v\n", p)
+	case Chef:
+		fmt.Printf("We have a chef=%v, Let him cook...\n", p)
+		p.Cook()
+	default:
+		fmt.Printf("Unknown type=%T, value=%v\n", p, p)
 	}
 }
 
@@ -109,4 +141,27 @@ func main() {
 	}
 
 	// ********** Partie III : empty interface ********** //
+
+	// Dans d'autre language il existe des types génériques, pas en go
+	// On peut utiliser l'empty interface pour palier ce manque, elle peut contenir tous les types
+	// idée : tous les types implémentent au moins 0 méthodes
+	// Exemple :
+	var x interface{} = Person{"bob", 10}
+	fmt.Printf("x type= %T, data=%v\n", x, x)
+	s, ok := x.(string)
+	fmt.Printf("Person as string ok ? %v. value='%v'\n", ok, s)
+
+	processPerson(x)
+
+	// Rappel : struct embedded ci-dessous
+	x = Chef{
+		Stars: 4,
+		Person: Person{
+			Name: "Alice",
+			Age:  22,
+		},
+	}
+	processPerson(x)
+	processPerson(3)
+	processPerson("Emilien")
 }
