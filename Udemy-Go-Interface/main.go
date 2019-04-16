@@ -15,7 +15,13 @@ Interface = regroupement nommé de signatures de fonctions
 
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"io"
+	"io/ioutil"
+	"net/http"
+	"os"
+)
 
 // ********** Partie I : intéret d'une interface ********** //
 
@@ -164,4 +170,31 @@ func main() {
 	processPerson(x)
 	processPerson(3)
 	processPerson("Emilien")
+
+	// ********** Partie IV : reader & writer ********** //
+	// Exemple ci dessous : reader est construit avec une interface vide
+	// permettant de lire des données depuis n'importe quelle type de source (fichier ou string ou http...)
+
+	// r := strings.NewReader("Hello Gophers! Readers are awesomes")
+	r, err := os.Open("test.txt")
+	buf, err := ioutil.ReadAll(r)
+	if err != nil {
+		fmt.Printf("Error in reader : %v\n", err)
+		return
+	}
+	fmt.Println(string(buf))
+
+	// ********** Partie V : requête HTTP ********** //
+	resp, err := http.Get("https://golang.org")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	defer resp.Body.Close()
+	// Read All appel la fonction read sur resp.Body
+	// body, _ := ioutil.ReadAll(resp.Body)
+	// fmt.Println(string(body))
+	f, _ := os.Create("golang.html")
+	defer f.Close()
+	io.Copy(f, resp.Body)
 }
