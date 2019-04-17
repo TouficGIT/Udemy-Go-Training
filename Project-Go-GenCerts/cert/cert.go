@@ -40,13 +40,14 @@ func New(course, name, date string) (*Cert, error) {
 	}
 
 	cert := &Cert{
-		Course:          c,
-		Name:            n,
-		Date:            d,
-		LabelTitle:      fmt.Sprintf("%v Certificate - %v", c, n),
-		LabelCompletion: "Certification of Completion",
-		LabelPresented:  "This Certification is Presented To",
-		LabelDate:       fmt.Sprintf("Date: %v", d.Format("02/01/2006")),
+		Course:             c,
+		Name:               n,
+		Date:               d,
+		LabelTitle:         fmt.Sprintf("%v Certificate - %v", c, n),
+		LabelCompletion:    "Certification of Completion",
+		LabelPresented:     "This Certification is Presented To",
+		LabelParticipation: fmt.Sprintf("For participation in the %v", c),
+		LabelDate:          fmt.Sprintf("Date: %v", d.Format("02/01/2006")),
 	}
 	return cert, nil
 }
