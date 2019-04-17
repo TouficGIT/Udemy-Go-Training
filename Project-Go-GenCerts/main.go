@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"Training.go/Project-Go-GenCerts/cert"
-	"Training.go/Project-Go-GenCerts/pdf"
+	"Training.go/Project-Go-GenCerts/html"
 )
 
 func main() {
@@ -16,7 +16,7 @@ func main() {
 	}
 
 	var saver cert.Saver
-	saver, err = pdf.New("output")
+	saver, err = html.New("output")
 	if err != nil {
 		fmt.Printf("Error during pdf generator creation: %v", err)
 		os.Exit(1)
